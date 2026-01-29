@@ -2,7 +2,7 @@
  * TTN / The Things Stack custom payload decoder for batched log uplinks (M0 and RP2040-LoRa).
  * Payload (big-endian): [vbat_hi, vbat_lo] (V×100), [n], [timeTick_hi, timeTick_mid, timeTick_lo, temp_hi, temp_lo] × n (5 bytes per entry).
  * Temperature: 0–3000 = centidegrees; 0xFFFD => >30°C, 0xFFFE => <0°C, 0xFFFF = error.
- * TimeTick = 1-min ticks since 2026-01-01 00:00:00 UTC (24-bit).
+ * TimeTick = 1-min ticks since custom epoch; epoch must match firmware CUSTOM_EPOCH (24-bit).
  * When tick is 0 (device RTC not yet synced), timestamp is derived from received_at and 5-min spacing.
  *
  * In Console → Application → Payload Formats → Custom: paste this as decoder.
@@ -37,7 +37,8 @@ function decodeUplink(input) {
   var maxN = ((b.length - 3) / 5) | 0;
   if (n > maxN) n = maxN;
 
-  var customEpoch = new Date('2026-01-01T00:00:00Z').getTime();
+  // Must match firmware CUSTOM_EPOCH (1735689600 = 2025-01-01 00:00:00 UTC); same numeric value in ms.
+  var customEpoch = 1735689600 * 1000;
   var receivedAtMs = null;
   if (input.recvTime && typeof input.recvTime.getTime === 'function') {
     receivedAtMs = input.recvTime.getTime();
