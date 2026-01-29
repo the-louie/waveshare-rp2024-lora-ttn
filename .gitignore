@@ -4,5 +4,4 @@
 
 # LoRaWAN OTAA credentials; do not commit real keys. Copy app-device-config.h.example to app-device-config.h and fill from TTN.
 app-device-config.h
-docs/app-device-config.h
 docs
