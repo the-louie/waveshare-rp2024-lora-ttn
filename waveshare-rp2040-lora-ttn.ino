@@ -255,7 +255,7 @@ void setup() {
     SERIAL_BEGIN(9600);
     delay(2000);
     SERIAL_PRINT(FIRMWARE_BUILD);
-    SERIAL_PRINTLN(F(" pico-lorawan-ttn starting"));
+    SERIAL_PRINTLN(F(" waveshare-rp2040-lora-ttn starting"));
 
     SERIAL_PRINTLN(F("EEPROM begin..."));
     EEPROM.begin(1024);  /* Min needed: sizeof(PersistentData_t)+sizeof(PersistentLog_t); 1024 plenty */

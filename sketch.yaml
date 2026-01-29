@@ -1,0 +1,18 @@
+# Board: Waveshare RP2040 LoRa (rp2040:rp2040:waveshare_rp2040_lora)
+# Package index: use local file so IDE/CLI picks this board from the specified index
+default_fqbn: rp2040:rp2040:waveshare_rp2040_lora
+default_protocol: uf2
+
+# Profile forces the platform from the local package index (e.g. so correct target is used)
+default_profile: waveshare_rp2040_lora
+
+libraries:
+  - name: RadioLib
+  - name: OneWire
+
+profiles:
+  waveshare_rp2040_lora:
+    fqbn: rp2040:rp2040:waveshare_rp2040_lora
+    platform: rp2040:rp2040
+    platform_index_url: file:///D:/Downloads/package_rp2040_index.json
+    protocol: uf2

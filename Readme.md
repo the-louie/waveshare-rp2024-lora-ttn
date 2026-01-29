@@ -20,7 +20,7 @@ Pin and SPI configuration: see [config.h](config.h). Pins match the [Waveshare w
 
 ## TTN setup
 
-EU868, OTAA. Put AppEUI, DevEUI, AppKey in [app-device-config.h](app-device-config.h). Use the payload decoder [ttn-decoder-batch.js](ttn-decoder-batch.js) in TTN Console → Application → Payload Formats → Custom.
+EU868, OTAA. Put AppEUI, DevEUI, AppKey in `app-device-config.h` (copy [app-device-config.h.example](app-device-config.h.example) to `app-device-config.h` and fill from TTN; do not commit real keys). Use the payload decoder [ttn-decoder-batch.js](ttn-decoder-batch.js) in TTN Console → Application → Payload Formats → Custom.
 
 ## Payload format
 

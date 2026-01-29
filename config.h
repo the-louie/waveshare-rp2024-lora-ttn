@@ -11,8 +11,8 @@
  * all radio pins are defined here (config.h) for this board.
  */
 
-#ifndef PICO_LORAWAN_TTN_CONFIG_H
-#define PICO_LORAWAN_TTN_CONFIG_H
+#ifndef WAVESHARE_RP2040_LORA_TTN_CONFIG_H
+#define WAVESHARE_RP2040_LORA_TTN_CONFIG_H
 
 /* SX1262 pins (RP2040-LoRa single board). Wiki: DIO1=GP16, RST=GP23, MISO=GP24,
  * MOSI=GP15, CLK=GP14, CS=GP13, BUSY=GP18, ANT_SW=GP17. Not Pico-LoRa-SX1262 HAT. */

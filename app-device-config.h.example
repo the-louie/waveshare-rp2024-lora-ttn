@@ -1,5 +1,6 @@
 /*
- * LoRaWAN OTAA credentials. Copy from TTN Console; do not commit real keys to public repo.
+ * LoRaWAN OTAA credentials. Copy this file to app-device-config.h and fill from TTN Console.
+ * Do not commit app-device-config.h with real keys to a public repo.
  * EU868 / TTN EU.
  *
  * RadioLib format (for beginOTAA):
@@ -9,7 +10,7 @@
 #ifndef WAVESHARE_RP2040_LORA_TTN_APP_DEVICE_CONFIG_H
 #define WAVESHARE_RP2040_LORA_TTN_APP_DEVICE_CONFIG_H
 
-/* EUIs: MSB (human-readable) literal; copy hex from TTN (e.g. 70B3D57ED007560E -> 0x70B3D57ED007560EULL). */
+/* EUIs: MSB (human-readable) literal; copy hex from TTN (e.g. 0000000000000000 -> 0x0000000000000000ULL). */
 #define LORAWAN_JOIN_EUI  0x0000000000000000ULL
 #define LORAWAN_DEV_EUI   0x0000000000000000ULL
 
