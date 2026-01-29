@@ -14,7 +14,8 @@
 //#define LORAWAN_DEV_EUI   0x70B3D57ED007560EULL  /* telamon-device-1 */
 #define LORAWAN_DEV_EUI   0x70B3D57ED00756C3ULL  /* telamon-device-2 */
 
-/* Keys: MSB (big-endian) C-style array; paste from TTN. NwkKey: pass nullptr in beginOTAA if not used. */
-#define LORAWAN_APP_KEY   { 0x72, 0xA5, 0x30, 0xB5, 0xB0, 0xE7, 0xC3, 0x0C, 0x65, 0x2D, 0x66, 0xAD, 0x6D, 0xA9, 0x2C, 0xD5 }
+/* Keys: MSB (big-endian) C-style array; MUST match TTN for the DevEUI above. MIC mismatch = wrong key. */
+/* telamon-device-1: 72A530B5B0E7C30C652D66AD6DA92CD5 | telamon-device-2: 09715FB1759414EB4768087215920246 */
+#define LORAWAN_APP_KEY   { 0x09, 0x71, 0x5F, 0xB1, 0x75, 0x94, 0x14, 0xEB, 0x47, 0x68, 0x08, 0x72, 0x15, 0x92, 0x02, 0x46 }
 
 #endif

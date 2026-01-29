@@ -1,6 +1,7 @@
 /*
  * LoRaWAN OTAA credentials. Copy from TTN Console; do not commit real keys to public repo.
- * EU868 / TTN EU. Match sketch app-device-config.h: JoinEUI/DevEUI as literal 0x...ULL; AppKey as C-style array MSB.
+ * EU868 / TTN EU. JoinEUI/DevEUI as literal 0x...ULL; AppKey as C-style array MSB.
+ * AppKey MUST match the key in TTN for the chosen DevEUI; MIC mismatch = wrong key.
  */
 #ifndef PICO_LORAWAN_TTN_APP_DEVICE_CONFIG_H
 #define PICO_LORAWAN_TTN_APP_DEVICE_CONFIG_H

@@ -16,7 +16,7 @@
 #include "app-device-config.h"
 
 /* Increment for each upload to confirm firmware on device. */
-#define FIRMWARE_BUILD 27
+#define FIRMWARE_BUILD 28
 
 /* RUN_MODE: DEV = short intervals + Serial; TEST = same intervals + Serial; PROD = 5 min, no Serial. */
 #define RUN_MODE_DEV  1
@@ -49,7 +49,8 @@
 #define SLEEP_SECONDS        300
 #endif
 
-#define PERSIST_MAGIC 0x4C4D4943u
+#define PERSIST_MAGIC   0x4C4D4943u
+#define PERSIST_MAGIC_V2 0x4C4D4944u  /* V2: includes devEuiTag so session is only restored for same device */
 #define LOG_FLASH_MAGIC 0x4C4F4732u
 #define LOG_ENTRIES_MAX 48
 #define LOG_SEND_CAP    43
@@ -77,6 +78,7 @@ typedef struct {
     uint8_t measuresInPeriod;
     uint8_t sessionBuf[RADIOLIB_LORAWAN_SESSION_BUF_SIZE];
     uint8_t noncesBuf[RADIOLIB_LORAWAN_NONCES_BUF_SIZE];
+    uint64_t devEuiTag;  /* LORAWAN_DEV_EUI when session was saved; restore only if matches current */
 } PersistentData_t;
 
 typedef struct {
@@ -162,7 +164,8 @@ static void mergeBackupAndPrepareSend(void) {
 }
 
 static void persistData(void) {
-    persistentData.magic = PERSIST_MAGIC;
+    persistentData.magic = PERSIST_MAGIC_V2;
+    persistentData.devEuiTag = (uint64_t)LORAWAN_DEV_EUI;
     if (node && node->isActivated()) {
         memcpy(persistentData.sessionBuf, node->getBufferSession(), RADIOLIB_LORAWAN_SESSION_BUF_SIZE);
         memcpy(persistentData.noncesBuf, node->getBufferNonces(), RADIOLIB_LORAWAN_NONCES_BUF_SIZE);
@@ -263,7 +266,8 @@ void setup() {
     delay(100);  /* Let USB serial buffer drain so next print does not block */
 #endif
     SERIAL_PRINTLN(F("post-load"));
-    haveStoredSession = (persistentData.magic == PERSIST_MAGIC);
+    haveStoredSession = (persistentData.magic == PERSIST_MAGIC_V2
+        && persistentData.devEuiTag == (uint64_t)LORAWAN_DEV_EUI);
     if (!haveStoredSession) {
         persistentData.wakeCounter = 0;
         persistentData.measuresInPeriod = 0;
@@ -411,11 +415,27 @@ void setup() {
         }
     }
     if (!joined) {
-        SERIAL_PRINTLN(F("Attempting Join..."));
-        int16_t res = node->activateOTAA();
-        if (res != RADIOLIB_ERR_NONE) {
-            SERIAL_PRINT(F("Join failed Error: "));
+        const int joinAttemptsMax = 3;
+        int16_t res = RADIOLIB_ERR_NONE;
+        for (int attempt = 1; attempt <= joinAttemptsMax; attempt++) {
+            SERIAL_PRINT(F("Attempting Join "));
+            SERIAL_PRINT(attempt);
+            SERIAL_PRINTLN(F("/3..."));
+            res = node->activateOTAA();
+            if (res == RADIOLIB_ERR_NONE) break;
+            SERIAL_PRINT(F("Join attempt "));
+            SERIAL_PRINT(attempt);
+            SERIAL_PRINT(F(" failed: "));
             SERIAL_PRINTLN(res);
+            if (res == -1116) {
+                SERIAL_PRINTLN(F("-1116: no JoinAccept in RX window; TTN may have sent it. Retrying..."));
+            }
+            if (attempt < joinAttemptsMax) delay(3000);
+        }
+        if (res != RADIOLIB_ERR_NONE) {
+            SERIAL_PRINT(F("Join failed after "));
+            SERIAL_PRINT(joinAttemptsMax);
+            SERIAL_PRINTLN(F(" attempts."));
             return;
         }
         joined = true;
